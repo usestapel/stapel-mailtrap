@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "mailtrap.email.trapped",
+  "description": "An outbound email was captured by the trap instead of being sent (dev/staging). Consumers can surface it in a UI feed or count it; the body lives on the TrappedEmail row, fetched via the Mail API by email_id.",
+  "type": "object",
+  "required": ["email_id", "to", "subject", "scope_key", "attachment_count", "trapped_at"],
+  "properties": {
+    "email_id":         { "type": "string", "format": "uuid" },
+    "to":               { "type": "string" },
+    "from":             { "type": "string" },
+    "subject":          { "type": "string" },
+    "scope_key":        { "type": "string" },
+    "attachment_count": { "type": "integer", "minimum": 0 },
+    "trapped_at":       { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

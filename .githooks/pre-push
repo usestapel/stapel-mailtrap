@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+echo "Running ruff lint check before push..."
+ruff check . --select E,F,W --ignore E501
+echo "Running emit-check (outbox atomicity gate)..."
+python -m stapel_core.lint.emit_check .
+echo "Pre-push checks passed."
