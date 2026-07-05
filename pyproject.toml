@@ -11,13 +11,27 @@ license = { text = "MIT" }
 requires-python = ">=3.11"
 keywords = ["django", "stapel", "email", "mailtrap", "mailcatcher"]
 classifiers = [
+    "Development Status :: 4 - Beta",
     "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
 ]
 dependencies = [
     "stapel-core>=0.5,<0.6",
 ]
+
+[project.urls]
+Homepage = "https://github.com/usestapel/stapel-mailtrap"
+Repository = "https://github.com/usestapel/stapel-mailtrap"
+Documentation = "https://github.com/usestapel/stapel-mailtrap#readme"
+Changelog = "https://github.com/usestapel/stapel-mailtrap/blob/main/CHANGELOG.md"
+Issues = "https://github.com/usestapel/stapel-mailtrap/issues"
 
 [project.optional-dependencies]
 all = []
@@ -29,11 +43,18 @@ packages = [
     "stapel_mailtrap.migrations",
     "stapel_mailtrap.management",
     "stapel_mailtrap.management.commands",
-    "stapel_mailtrap.tests",
 ]
 
 [tool.setuptools.package-data]
 stapel_mailtrap = ["py.typed", "migrations/*.py", "schemas/**/*.json"]
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+# Single source for the git hooks and CI (they pass the same flags on the CLI).
+select = ["E", "F", "W"]
+ignore = ["E501"]
 
 [tool.pytest.ini_options]
 django_find_project = false

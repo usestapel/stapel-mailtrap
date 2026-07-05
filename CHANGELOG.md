@@ -9,6 +9,13 @@ to pre-1.0 semver (**minor = breaking**, patch = compatible).
 Initial release — an email trap (mail catcher) for the Stapel framework
 (studio-design §7 SN-5).
 
+### Packaging
+- Tests excluded from the built wheel/sdist (the `stapel_mailtrap.tests`
+  subpackage is no longer listed in `[tool.setuptools] packages`). Added
+  `[project.urls]`, completed the trove classifiers (MIT/OSI, Python 3.13,
+  `Typing :: Typed`, OS Independent, `3 :: Only`, Development Status) and a
+  `[tool.ruff]` lint section (single source shared with the git hooks/CI).
+
 ### Added
 
 - `TrappedEmail` model — captured outbound message (to/from/subject/HTML+text
