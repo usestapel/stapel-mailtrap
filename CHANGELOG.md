@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project adheres
 to pre-1.0 semver (**minor = breaking**, patch = compatible).
 
+## [0.1.1] - 2026-07-06
+
+### Changed
+- Pinned `stapel-core` to the `>=0.8,<0.9` window (library-standard §7.1: one
+  minor window; floor `0.8.0` is published on PyPI — no pin into the void).
+- CI: added the release-track job (library-standard §7.4) — installs the package
+  the way an end user does (`pip install .`, dependencies resolved from PyPI
+  strictly by the declared pins, no git-main core, no editable siblings), asserts
+  `stapel-core` resolves inside the `0.8` window, and runs an import smoke.
+  Advisory (continue-on-error) until the whole stapel graph is on PyPI; becomes
+  the blocking precondition for a `vX.Y.Z` tag once it is.
+
+
 ## [0.1.0] - 2026-07-05
 
 Initial release — an email trap (mail catcher) for the Stapel framework
@@ -39,4 +52,5 @@ Initial release — an email trap (mail catcher) for the Stapel framework
 - Read-only admin, system checks (`W001`/`W002` on `SCOPE_PROVIDER`), MIT
   license, CI + PyPI trusted-publishing workflows.
 
+[0.1.1]: https://github.com/usestapel/stapel-mailtrap/releases/tag/v0.1.1
 [0.1.0]: https://github.com/usestapel/stapel-mailtrap/releases/tag/v0.1.0
