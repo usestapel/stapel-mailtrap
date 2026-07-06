@@ -9,14 +9,24 @@ there is no FK to any user or tenant model — ownership/tenancy is the opaque
 import uuid
 
 from django.db import models
+from stapel_core.access import access
 
 
+@access.ops
 class TrappedEmail(models.Model):
     """One outbound email captured instead of sent.
 
     Attachments are stored as *metadata only* (filename/content_type/size) —
     the trap is a journal, not a mailbox; it never persists raw attachment
     bytes.
+
+    ``@access.ops`` (admin-suite AS-5): a delivery-log-shaped journal written
+    exclusively by ``services.trap_email`` — no staff add/change workflow
+    through the admin exists or is implied. ``StapelModelAdmin`` (see
+    ``admin.py``) now also forbids admin-layer *delete*, which narrows the
+    admin from "inspect + delete for manual cleanup" to inspect-only;
+    retention still runs through ``services.purge_expired()`` (the management
+    command / Celery task), which is unaffected by admin permissions.
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

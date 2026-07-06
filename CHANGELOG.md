@@ -4,6 +4,20 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project adheres
 to pre-1.0 semver (**minor = breaking**, patch = compatible).
 
+## [Unreleased]
+
+### Changed
+- Admin-suite AS-5: decorated `TrappedEmail` `@access.ops` (a delivery-log-shaped
+  journal written exclusively by `services.trap_email` — no staff add/change
+  workflow through the admin) and swapped `TrappedEmailAdmin`'s base class to
+  `stapel_core.django.admin.base.StapelModelAdmin`, which now enforces the
+  read-only contract instead of the two hand-rolled `has_*_permission`
+  overrides. This also forbids admin-layer delete (previously allowed for
+  manual cleanup) for everyone including the superuser; the retention sweep
+  (`services.purge_expired()`, the management command / Celery task) is
+  unaffected. No model in this repo carries credential material, so no
+  `@access.secret` classification applies.
+
 ## [0.1.1] - 2026-07-06
 
 ### Changed

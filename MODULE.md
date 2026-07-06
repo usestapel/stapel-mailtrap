@@ -23,7 +23,7 @@ behind the Studio `send_email` gateway verb (studio-design §1.3, §7 SN-5).
 | notifications provider | `provider.MailtrapEmailProvider` — a drop-in email provider for stapel-notifications, wired by **dotted path** (no import of that package) |
 | Mail API ("Письма") | Read-only DRF: `GET emails/` (paginated, filter `?scope_key=`) + `GET emails/<uuid>/` (full bodies + attachment metadata) |
 | Retention | `MAX_EMAILS` + `TTL_DAYS` settings; `services.purge_expired()` sweep exposed as the `purge_trapped_emails` command and the `stapel_mailtrap.tasks.purge_trapped_emails` Celery task |
-| Admin | Read-only journal admin (inspect + delete only) |
+| Admin | Read-only journal admin (`@access.ops` — inspect-only; add/change/delete forbidden for everyone including the superuser) |
 
 Public API (`stapel_mailtrap.__all__`, PEP 562 lazy): `mailtrap_settings`,
 `MailtrapEmailProvider`, `ScopeProvider`, `DefaultScopeProvider`, `trap_email`,
@@ -123,6 +123,21 @@ This module registers no comm Functions and consumes no events.
 
 W-level on purpose: a bad scope provider degrades the API, it must not block
 deploys — the trap keeps capturing mail regardless.
+
+## Admin categories (`stapel_core.access`, admin-suite AS-5)
+
+`TrappedEmail` is decorated `@access.ops` and its `ModelAdmin` (`admin.py`)
+subclasses `stapel_core.django.admin.base.StapelModelAdmin`: it is the doc's
+own `NotificationLog`-shaped delivery journal, written exclusively by
+`services.trap_email` — there is no staff add/change workflow through the
+admin for `ops` to break. `StapelModelAdmin` enforces the read-only contract
+(view requires HIGH clearance; add/change/delete forbidden for everyone
+including the superuser) in place of the two hand-rolled `has_*_permission`
+overrides the admin used before this rollout. Note this also narrows the
+admin's prior delete behavior (it used to allow deleting a row for manual
+cleanup); retention is unaffected since it runs through
+`services.purge_expired()` (the management command / Celery task), not the
+admin UI.
 
 ## Anti-patterns (what the seams make unnecessary)
 
