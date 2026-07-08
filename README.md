@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/usestapel/stapel-mailtrap/actions/workflows/ci.yml/badge.svg)](https://github.com/usestapel/stapel-mailtrap/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/usestapel/stapel-mailtrap/graph/badge.svg)](https://codecov.io/gh/usestapel/stapel-mailtrap)
+[![PyPI](https://img.shields.io/pypi/v/stapel-mailtrap.svg)](https://pypi.org/project/stapel-mailtrap/)
 
 > An email trap (mail catcher) for dev/staging: outbound mail is captured into
 > a `TrappedEmail` journal instead of being sent, and browsed through a
