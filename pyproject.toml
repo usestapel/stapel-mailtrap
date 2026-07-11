@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stapel-mailtrap"
-version = "0.1.1"
+version = "0.1.2"
 description = "Email trap (mail catcher) for the Stapel framework — capture outbound email in dev/staging"
 readme = "README.md"
 license = { text = "MIT" }
@@ -23,7 +23,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "stapel-core>=0.8,<0.9",
+    "stapel-core>=0.10,<0.11",
 ]
 
 [project.urls]
