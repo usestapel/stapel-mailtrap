@@ -6,6 +6,13 @@ to pre-1.0 semver (**minor = breaking**, patch = compatible).
 
 ## [Unreleased]
 
+## [0.1.4] — 2026-07-17
+
+### Changed
+- `stapel-core` ceiling raised `>=0.10,<0.11` → `>=0.10,<0.12` (core 0.11
+  fleet re-pin: default bus, nav, config-checks, error params/language —
+  additive for modules). Suite green as-is.
+
 ## [0.1.3] — 2026-07-16
 
 ### Changed
