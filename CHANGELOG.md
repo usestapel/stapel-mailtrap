@@ -6,6 +6,18 @@ to pre-1.0 semver (**minor = breaking**, patch = compatible).
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-07-16
+
+### Changed
+- **v1 canon sweep §60** (api-versioning.md §2, §6): URL set moved to
+  `urls_v1.py` (paths inside unchanged, `mailtrap` namespace preserved); the
+  new root `urls.py` mounts it under `api/v1/`. Host mount `mailtrap/`
+  unchanged: endpoints now serve at `/mailtrap/api/v1/emails/...` (the module
+  previously had no `api/` segment at all — the canon adds `api/v1/`). No
+  contract artifacts in this repo yet — nothing to regenerate.
+- Lint hygiene to a clean `stapel-verify`: explicit `# noqa` on pre-existing
+  findings.
+
 ### Changed
 - Admin-suite AS-5: decorated `TrappedEmail` `@access.ops` (a delivery-log-shaped
   journal written exclusively by `services.trap_email` — no staff add/change

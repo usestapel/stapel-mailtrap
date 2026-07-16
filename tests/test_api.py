@@ -15,7 +15,7 @@ def staff(db):
 
 @pytest.mark.django_db
 def test_list_requires_staff(api_client):
-    resp = api_client.get("/mailtrap/emails/")
+    resp = api_client.get("/mailtrap/api/v1/emails/")
     assert resp.status_code in (401, 403)
 
 
@@ -25,7 +25,7 @@ def test_list_returns_trapped_emails(api_client, staff):
     trap_email(to_email="c@d.com", subject="two")
 
     api_client.force_authenticate(staff)
-    resp = api_client.get("/mailtrap/emails/")
+    resp = api_client.get("/mailtrap/api/v1/emails/")
 
     assert resp.status_code == 200
     subjects = {i["subject"] for i in resp.data["items"]}
@@ -38,7 +38,7 @@ def test_list_filters_by_scope_key(api_client, staff):
     trap_email(to_email="c@d.com", subject="ws2", scope_key="ws-2")
 
     api_client.force_authenticate(staff)
-    resp = api_client.get("/mailtrap/emails/", {"scope_key": "ws-1"})
+    resp = api_client.get("/mailtrap/api/v1/emails/", {"scope_key": "ws-1"})
 
     assert resp.status_code == 200
     assert [i["subject"] for i in resp.data["items"]] == ["ws1"]
@@ -55,7 +55,7 @@ def test_detail_returns_bodies(api_client, staff):
     )
 
     api_client.force_authenticate(staff)
-    resp = api_client.get(f"/mailtrap/emails/{email.id}/")
+    resp = api_client.get(f"/mailtrap/api/v1/emails/{email.id}/")
 
     assert resp.status_code == 200
     assert resp.data["body_html"] == "<p>hello</p>"
@@ -68,7 +68,7 @@ def test_detail_404(api_client, staff):
     import uuid
 
     api_client.force_authenticate(staff)
-    resp = api_client.get(f"/mailtrap/emails/{uuid.uuid4()}/")
+    resp = api_client.get(f"/mailtrap/api/v1/emails/{uuid.uuid4()}/")
 
     assert resp.status_code == 404
     assert resp.data["localizable_error"] == "error.404.mailtrap_email_not_found"

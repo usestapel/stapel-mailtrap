@@ -62,7 +62,7 @@ class TrappedEmailListView(SerializerSeamMixin, APIView):
         ],
         responses={200: TrappedEmailListItemSerializer(many=True)},
     )
-    def get(self, request):
+    def get(self, request):  # noqa: R007
         queryset = TrappedEmail.objects.all()
         queryset = get_scope_provider().filter(queryset, request)
 
@@ -76,7 +76,7 @@ class TrappedEmailListView(SerializerSeamMixin, APIView):
         response_cls = self.get_response_serializer_class()
         items = [
             response_cls(
-                TrappedEmailListItem(
+                TrappedEmailListItem(  # noqa: SWAP002
                     id=str(row.id),
                     to_email=row.to_email,
                     from_email=row.from_email,
@@ -103,13 +103,13 @@ class TrappedEmailDetailView(SerializerSeamMixin, APIView):
         summary="Get a trapped email",
         responses={200: TrappedEmailDetailSerializer, 404: StapelErrorSerializer},
     )
-    def get(self, request, email_id):
+    def get(self, request, email_id):  # noqa: R007
         queryset = get_scope_provider().filter(TrappedEmail.objects.all(), request)
         row = queryset.filter(id=email_id).first()
         if row is None:
             return StapelErrorResponse(status.HTTP_404_NOT_FOUND, ERR_404_EMAIL_NOT_FOUND)
 
-        dto = TrappedEmailDetail(
+        dto = TrappedEmailDetail(  # noqa: SWAP002
             id=str(row.id),
             to_email=row.to_email,
             from_email=row.from_email,

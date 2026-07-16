@@ -1,17 +1,12 @@
-"""URL patterns — no global prefix here, the host project mounts them:
+"""Root URLconf for stapel-mailtrap — v1 canon mount (api-versioning.md §2, §6).
 
-    path("mailtrap/", include("stapel_mailtrap.urls"))
-
-Routes (relative to the mount): ``emails/`` (list), ``emails/<uuid:email_id>/``
-(retrieve).
+Canon: ``/<mod>/api/v1/...`` — the version segment sits right after ``api/``.
+Hosts keep mounting ``include('stapel_mailtrap.urls')`` under ``mailtrap/``;
+this module contributes the ``api/v1/`` prefix. The actual URL set (paths
+inside unchanged, namespace ``mailtrap`` preserved) lives in ``urls_v1.py``.
 """
-from django.urls import path
-
-from .views import TrappedEmailDetailView, TrappedEmailListView
-
-app_name = "mailtrap"
+from django.urls import include, path
 
 urlpatterns = [
-    path("emails/", TrappedEmailListView.as_view(), name="email-list"),
-    path("emails/<uuid:email_id>/", TrappedEmailDetailView.as_view(), name="email-detail"),
+    path('api/v1/', include('stapel_mailtrap.urls_v1')),
 ]

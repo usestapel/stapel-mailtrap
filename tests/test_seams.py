@@ -23,7 +23,7 @@ def test_scope_provider_swap_narrows_list(api_client, settings):
 
     staff = get_user_model().objects.create(username="s", is_staff=True)
     api_client.force_authenticate(staff)
-    resp = api_client.get("/mailtrap/emails/")
+    resp = api_client.get("/mailtrap/api/v1/emails/")
 
     assert [i["subject"] for i in resp.data["items"]] == ["visible"]
 
