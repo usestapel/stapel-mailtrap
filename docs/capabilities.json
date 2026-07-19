@@ -1,0 +1,65 @@
+{
+  "module": "stapel-mailtrap",
+  "version": "0.1.5",
+  "provides": "An email trap (mail catcher) for dev/staging: outbound mail is captured into a TrappedEmail journal instead of being sent, and browsed through a read-only, scope-filtered Mail API. Plugs into stapel-notifications' email-provider seam by dotted path (duck-typed send() contract) — no module-to-module import.",
+  "axes": [
+    {
+      "key": "STORE_BODY",
+      "kind": "bool",
+      "default": true,
+      "group": "mailtrap.retention",
+      "gates": {
+        "operations": [],
+        "co_gates": []
+      },
+      "curated": {
+        "summary": "Store the rendered HTML/text bodies on the row. A host that only needs the envelope (to/from/subject) for a lighter footprint can turn this off; bodies are then stored empty (conf.py, MODULE.md Settings table).",
+        "business_label": "Store full email bodies (vs. envelope only)"
+      }
+    },
+    {
+      "key": "MAX_EMAILS",
+      "kind": "enum",
+      "default": 1000,
+      "group": "mailtrap.retention",
+      "gates": {
+        "operations": [],
+        "co_gates": []
+      },
+      "curated": {
+        "summary": "Hard cap on stored messages; the retention sweep deletes the oldest rows beyond this many. 0 disables the count cap (conf.py).",
+        "business_label": "Maximum trapped emails retained"
+      }
+    }
+  ],
+  "extension_points": [
+    {
+      "name": "SCOPE_PROVIDER",
+      "kind": "dotted_path",
+      "summary": "REPLACE, single strategy: a ScopeProvider subclass (filter(queryset, request)). Default is a no-op single global scope; a multi-tenant host filters so one tenant never reads another's trapped mail (scope.py, MODULE.md Extension point 2)."
+    },
+    {
+      "name": "notifications email provider",
+      "kind": "duck_typed_dotted_path",
+      "summary": "MailtrapEmailProvider implements notifications' duck-typed send(recipient, subject, html_body, headers) contract; wired via STAPEL_NOTIFICATIONS['EMAIL_PROVIDER'] = 'stapel_mailtrap.provider.MailtrapEmailProvider', no import either direction (provider.py, MODULE.md Extension point 3)."
+    },
+    {
+      "name": "serializer_seams",
+      "kind": "class_override",
+      "summary": "Both views carry response_serializer_class via SerializerSeamMixin (TrappedEmailListItemSerializer / TrappedEmailDetailSerializer); swap by subclassing and remounting (views.py:30-33, MODULE.md Extension point 4)."
+    }
+  ],
+  "operations_total": 2,
+  "requires": [
+    {
+      "module": "stapel-core",
+      "optional": false,
+      "reason": "the only stapel-* dependency: AppSettings config layer (pyproject.toml dependency)"
+    },
+    {
+      "module": "stapel-notifications",
+      "optional": true,
+      "reason": "consumer of this module's email-provider seam via a duck-typed dotted path (STAPEL_NOTIFICATIONS['EMAIL_PROVIDER']); no direct import either direction (MODULE.md Extension point 3)"
+    }
+  ]
+}
