@@ -6,6 +6,21 @@ to pre-1.0 semver (**minor = breaking**, patch = compatible).
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-08-02
+
+### Fixed - `tests/test_contract.py` (added in 0.1.7) needs `stapel-tools` on the release track too
+
+`ci.yml`'s test job only stayed green by accident: the `migration-lint`
+step runs `pip install stapel-tools` before the test step, so
+`stapel_tools.llms_txt` (imported by `tests/test_contract.py`) happened to
+already be on the path. `publish.yml`'s test job has no migration-lint
+step, so the same import failed there with `ModuleNotFoundError` — the
+0.1.7 tag's publish run never got past `test` (no wheel was built,
+nothing reached PyPI). Both workflows now install
+`"stapel-tools>=0.9.1,<1"` explicitly in the "Install test dependencies"
+step, matching the convention already used in `stapel-notifications`/
+`stapel-profiles`/`stapel-shop`.
+
 ## [0.1.7] - 2026-08-02
 
 Packaging/CI only, no runtime change.

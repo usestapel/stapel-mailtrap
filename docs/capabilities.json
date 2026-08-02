@@ -1,6 +1,6 @@
 {
   "module": "stapel-mailtrap",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "provides": "An email trap (mail catcher) for dev/staging: outbound mail is captured into a TrappedEmail journal instead of being sent, and browsed through a read-only, scope-filtered Mail API. Plugs into stapel-notifications' email-provider seam by dotted path (duck-typed send() contract) — no module-to-module import.",
   "axes": [
     {
