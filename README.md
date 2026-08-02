@@ -1,8 +1,11 @@
 # stapel-mailtrap
 
-[![CI](https://github.com/usestapel/stapel-mailtrap/actions/workflows/ci.yml/badge.svg)](https://github.com/usestapel/stapel-mailtrap/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/usestapel/stapel-mailtrap/graph/badge.svg)](https://codecov.io/gh/usestapel/stapel-mailtrap)
-[![PyPI](https://img.shields.io/pypi/v/stapel-mailtrap.svg)](https://pypi.org/project/stapel-mailtrap/)
+[![CI](https://img.shields.io/github/actions/workflow/status/usestapel/stapel-mailtrap/ci.yml?branch=main&logo=github&label=CI)](https://github.com/usestapel/stapel-mailtrap/actions/workflows/ci.yml?query=branch%3Amain)
+[![coverage](https://img.shields.io/codecov/c/github/usestapel/stapel-mailtrap?branch=main&logo=codecov&label=coverage)](https://app.codecov.io/gh/usestapel/stapel-mailtrap)
+[![pypi](https://img.shields.io/pypi/v/stapel-mailtrap?logo=pypi&logoColor=white&label=pypi)](https://pypi.org/project/stapel-mailtrap/)
+[![downloads](https://static.pepy.tech/badge/stapel-mailtrap/month)](https://pepy.tech/project/stapel-mailtrap)
+[![python](https://img.shields.io/pypi/pyversions/stapel-mailtrap?logo=python&logoColor=white)](https://pypi.org/project/stapel-mailtrap/)
+[![license](https://img.shields.io/github/license/usestapel/stapel-mailtrap)](https://github.com/usestapel/stapel-mailtrap/blob/main/LICENSE)
 
 > An email trap (mail catcher) for dev/staging: outbound mail is captured into
 > a `TrappedEmail` journal instead of being sent, and browsed through a
