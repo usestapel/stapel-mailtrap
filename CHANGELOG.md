@@ -6,6 +6,23 @@ to pre-1.0 semver (**minor = breaking**, patch = compatible).
 
 ## [Unreleased]
 
+## [0.1.7] - 2026-08-02
+
+Packaging/CI only, no runtime change.
+
+### Changed
+- CI now tests Python 3.14 (the version production runs) alongside 3.11-3.13.
+- Badge canon; `migration-lint` CI step enabled now that `stapel-tools` is on PyPI.
+- Contract documents (`docs/capabilities.json`, `docs/flows.json`,
+  `docs/errors.json`, `CONFIG.MD`) ship inside the wheel via `package-data` (#184).
+- `docs/llms.txt` — the fifth contract artifact (badge-canon §3), rendered
+  from the hand-authored `docs/capabilities.json`, wired into new
+  `make contract`/`contract-check` targets plus `tests/test_contract.py`,
+  and now packaged into the wheel.
+- `docs/capabilities.json`'s hand-maintained `version` field brought back
+  in line with `pyproject.toml` (it had drifted to 0.1.5 while the package
+  moved to 0.1.6).
+
 ## [0.1.5] - 2026-07-17
 
 Fleet follow-up to stapel-core 0.12.0 (legacy shim sweep). No source
