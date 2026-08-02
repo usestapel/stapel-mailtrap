@@ -6,6 +6,7 @@
 [![downloads](https://static.pepy.tech/badge/stapel-mailtrap/month)](https://pepy.tech/project/stapel-mailtrap)
 [![python](https://img.shields.io/pypi/pyversions/stapel-mailtrap?logo=python&logoColor=white)](https://pypi.org/project/stapel-mailtrap/)
 [![license](https://img.shields.io/github/license/usestapel/stapel-mailtrap)](https://github.com/usestapel/stapel-mailtrap/blob/main/LICENSE)
+[![llms.txt](https://img.shields.io/badge/llms.txt-blue)](https://github.com/usestapel/stapel-mailtrap/blob/main/docs/llms.txt)
 
 > An email trap (mail catcher) for dev/staging: outbound mail is captured into
 > a `TrappedEmail` journal instead of being sent, and browsed through a

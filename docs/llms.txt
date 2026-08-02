@@ -1,0 +1,25 @@
+# stapel-mailtrap 0.1.5
+
+An email trap (mail catcher) for dev/staging: outbound mail is captured into a TrappedEmail journal instead of being sent, and browsed through a read-only, scope-filtered Mail API. Plugs into stapel-notifications' email-provider seam by dotted path (duck-typed send() contract) — no module-to-module import.
+
+Contract: axes 2 · extension points 3.
+Generated from docs/capabilities.json by `stapel-llms-txt` — do not edit; drift-gated by `make contract-check`.
+
+## Configuration axes — what a product switches on
+Settings keys; `default` is what you get by saying nothing. Turning an axis off unmounts the operations it gates.
+- MAX_EMAILS [enum, default 1000] — Maximum trapped emails retained
+  Hard cap on stored messages; the retention sweep deletes the oldest rows beyond this many. 0 disables the count cap (conf.py).
+- STORE_BODY [bool, default true] — Store full email bodies (vs. envelope only)
+  Store the rendered HTML/text bodies on the row. A host that only needs the envelope (to/from/subject) for a lighter footprint can turn this off; bodies are then stored empty (conf.py, MODULE.md Settings table).
+
+## Extension points — what a product replaces, fork-free
+- SCOPE_PROVIDER [dotted_path]
+  REPLACE, single strategy: a ScopeProvider subclass (filter(queryset, request)). Default is a no-op single global scope; a multi-tenant host filters so one tenant never reads another's trapped mail (scope.py, MODULE.md Extension point 2).
+- notifications email provider [duck_typed_dotted_path]
+  MailtrapEmailProvider implements notifications' duck-typed send(recipient, subject, html_body, headers) contract; wired via STAPEL_NOTIFICATIONS['EMAIL_PROVIDER'] = 'stapel_mailtrap.provider.MailtrapEmailProvider', no import either direction (provider.py, MODULE.md Extension point 3).
+- serializer_seams [class_override]
+  Both views carry response_serializer_class via SerializerSeamMixin (TrappedEmailListItemSerializer / TrappedEmailDetailSerializer); swap by subclassing and remounting (views.py:30-33, MODULE.md Extension point 4).
+
+## Fits with — fleet dependencies
+- stapel-core (required) — the only stapel-* dependency: AppSettings config layer (pyproject.toml dependency)
+- stapel-notifications (optional) — consumer of this module's email-provider seam via a duck-typed dotted path (STAPEL_NOTIFICATIONS['EMAIL_PROVIDER']); no direct import either direction (MODULE.md Extension point 3)
