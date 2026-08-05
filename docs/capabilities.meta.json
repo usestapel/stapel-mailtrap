@@ -1,0 +1,33 @@
+{
+  "_comment": "Curated layer for the `surface` section of docs/capabilities.json (discoverability-design.md §1.2). NOTE the honest boundary: stapel-mailtrap's capabilities.json is otherwise still HAND-WRITTEN — this module has no schema/flows/errors emitter (see git log: 'author capabilities.json for the stapel-catalog sweep'), so provides/axes/extension_points/requires are not derived from code. `make contract` patches in the two derivable things: module/version from pyproject and the derived `surface`. NOTE what is deliberately NOT here: MailtrapEmailProvider (provider.py) is the sanctioned integration path for anything already wired through stapel-notifications' EMAIL_PROVIDER seam, and that seam is already named as an extension_point in capabilities.json — restating the class here would be the same prose twice. What IS here are the two entry points a host reaches for when it is NOT going through that seam: trap_email() for a custom mail backend that wants to plug into the trap directly (provider.py's own docstring says as much), and get_scope_provider()/purge_expired() for code that needs the same tenant-scoping or retention sweep the built-in views/command already use.",
+
+  "surface_roots": [
+    {"select": "functions", "path": "services.py"},
+    {"select": "functions", "path": "scope.py"}
+  ],
+
+  "surface": {
+    "trap_email": {
+      "kind": "gate_function",
+      "intent": "The single write path for capturing one outbound email as a TrappedEmail row, transactionally emitting mailtrap.email.trapped. Reach for this directly from a host's OWN mail-sending code path that does not go through stapel-notifications' EMAIL_PROVIDER seam (which already routes through this function via MailtrapEmailProvider) — do not hand-roll a second capture table or a bare logger.info() of outbound mail in dev/staging.",
+      "instead_of": [
+        "a second hand-rolled mail-capture table",
+        "logging outbound email ad hoc"
+      ]
+    },
+    "purge_expired": {
+      "kind": "gate_function",
+      "intent": "The retention sweep (STAPEL_MAILTRAP['TTL_DAYS'] + ['MAX_EMAILS']) shared by the purge_trapped_emails management command and the Celery task. Call this directly when a host needs the sweep on its own schedule or trigger (an admin 'purge now' button, a different task queue) — it is the one place both limits are implemented, so a hand-written deletion query is one of the two casually forgotten.",
+      "instead_of": [
+        "a hand-written TrappedEmail.objects.filter(...).delete() sweep"
+      ]
+    },
+    "get_scope_provider": {
+      "kind": "factory",
+      "intent": "Resolve the configured STAPEL_MAILTRAP['SCOPE_PROVIDER'] instance — the same call TrappedEmailListView/TrappedEmailDetailView make before filtering. Reach for this from any host-written view or report over TrappedEmail so it stays subject to the same tenant scope as the built-in Mail API, instead of re-reading the setting and instantiating the provider by hand (which is exactly how one code path could end up unscoped while the others are not).",
+      "instead_of": [
+        "re-reading STAPEL_MAILTRAP['SCOPE_PROVIDER'] and instantiating it by hand"
+      ]
+    }
+  }
+}

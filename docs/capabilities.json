@@ -49,6 +49,36 @@
       "summary": "Both views carry response_serializer_class via SerializerSeamMixin (TrappedEmailListItemSerializer / TrappedEmailDetailSerializer); swap by subclassing and remounting (views.py:30-33, MODULE.md Extension point 4)."
     }
   ],
+  "surface": [
+    {
+      "name": "get_scope_provider",
+      "kind": "factory",
+      "path": "stapel_mailtrap.scope.get_scope_provider",
+      "intent": "Resolve the configured STAPEL_MAILTRAP['SCOPE_PROVIDER'] instance — the same call TrappedEmailListView/TrappedEmailDetailView make before filtering. Reach for this from any host-written view or report over TrappedEmail so it stays subject to the same tenant scope as the built-in Mail API, instead of re-reading the setting and instantiating the provider by hand (which is exactly how one code path could end up unscoped while the others are not).",
+      "instead_of": [
+        "re-reading STAPEL_MAILTRAP['SCOPE_PROVIDER'] and instantiating it by hand"
+      ]
+    },
+    {
+      "name": "purge_expired",
+      "kind": "gate_function",
+      "path": "stapel_mailtrap.services.purge_expired",
+      "intent": "The retention sweep (STAPEL_MAILTRAP['TTL_DAYS'] + ['MAX_EMAILS']) shared by the purge_trapped_emails management command and the Celery task. Call this directly when a host needs the sweep on its own schedule or trigger (an admin 'purge now' button, a different task queue) — it is the one place both limits are implemented, so a hand-written deletion query is one of the two casually forgotten.",
+      "instead_of": [
+        "a hand-written TrappedEmail.objects.filter(...).delete() sweep"
+      ]
+    },
+    {
+      "name": "trap_email",
+      "kind": "gate_function",
+      "path": "stapel_mailtrap.services.trap_email",
+      "intent": "The single write path for capturing one outbound email as a TrappedEmail row, transactionally emitting mailtrap.email.trapped. Reach for this directly from a host's OWN mail-sending code path that does not go through stapel-notifications' EMAIL_PROVIDER seam (which already routes through this function via MailtrapEmailProvider) — do not hand-roll a second capture table or a bare logger.info() of outbound mail in dev/staging.",
+      "instead_of": [
+        "a second hand-rolled mail-capture table",
+        "logging outbound email ad hoc"
+      ]
+    }
+  ],
   "operations_total": 2,
   "requires": [
     {

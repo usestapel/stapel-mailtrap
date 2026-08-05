@@ -1,11 +1,13 @@
 """docs/llms.txt drift gate — the fifth contract artifact (badge-canon §3).
 
-Scope note: this module has no schema/flows/errors triad emitter and no
-capabilities.json emitter either — docs/capabilities.json here is
-HAND-AUTHORED (see the Makefile `contract` comment; git log: "author
-capabilities.json for the stapel-catalog sweep") and is committed by hand,
-never regenerated. This test file gates ONLY docs/llms.txt, which renders
-deterministically from that committed capabilities.json — no Django, no
+Scope note: this module has no schema/flows/errors triad emitter —
+docs/capabilities.json here is still HAND-AUTHORED for
+provides/axes/extension_points/requires (see the Makefile `contract` comment;
+git log: "author capabilities.json for the stapel-catalog sweep"). Its
+module/version and `surface` section ARE regenerated, by
+`stapel_tools.surface . --patch` (see tests/test_capabilities_surface.py) —
+this test file gates ONLY docs/llms.txt, which renders deterministically from
+whatever is currently committed as capabilities.json — no Django, no
 subprocess, no regeneration of anything else.
 
 Regenerate after any change to docs/capabilities.json:
