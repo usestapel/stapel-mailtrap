@@ -3,7 +3,7 @@
 In dev/staging, outbound mail must not leave the box (system-design S4: SMTP
 is closed). This module is the sink: an email "provider" that, instead of
 sending, persists every message as a ``TrappedEmail`` row and emits
-``mailtrap.email.trapped``. A read-only DRF API ("Письма" / Mail) lists and
+``mailtrap.email.trapped``. A read-only DRF API ("Mail") lists and
 inspects captured mail. It plugs into stapel-notifications' email-provider
 seam **by dotted path** — no module imports another (invariant I2).
 

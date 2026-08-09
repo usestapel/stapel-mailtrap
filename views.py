@@ -1,4 +1,4 @@
-"""DRF views for stapel-mailtrap — the "Mail" ("Письма") API.
+"""DRF views for stapel-mailtrap — the "Mail" API.
 
 Read-only: the trap is filled by the notifications provider / the
 ``trap_email`` service, never through this API. Two endpoints — a paginated
