@@ -6,6 +6,25 @@ to pre-1.0 semver (**minor = breaking**, patch = compatible).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-20
+
+### Added
+- The HTTP contract triad, emitted by `_codegen.py` from a single-module
+  `{mailtrap + core}` instance at the canonical `/mailtrap/` mount and shipped
+  in the wheel: `docs/schema.json` (profile 1, what stapel-react reads),
+  `docs/schema.v2.json` (contract profile 2: bearer scheme,
+  `error.404.mailtrap_email_not_found` bound to the detail's 404, the list's
+  anchor pagination named), `docs/flows.json`, `docs/errors.json`.
+  `make contract-check` re-emits them and fails on drift (`_codegen --check`);
+  CI runs it on 3.12.
+- Examples on both response bodies; `tests/test_contract_profile2.py` validates
+  every example and the profile-2 facts, `tests/test_contract_wire.py` performs
+  each JSON operation and validates the answered body against the declared one.
+
+### Changed
+- `stapel-core>=0.99.3` (the profile-2 emission). The test settings live in
+  `_codegen_settings.py`, shared by the suite and the emitter.
+
 ## [0.1.8] - 2026-08-02
 
 ### Fixed - `tests/test_contract.py` (added in 0.1.7) needs `stapel-tools` on the release track too

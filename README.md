@@ -24,17 +24,18 @@ pip install stapel-mailtrap
 
 | Fact | Value |
 |---|---|
-| Version | `0.1.8` |
+| Version | `0.2.0` |
 | Python | `>=3.11` (3.11, 3.12, 3.13, 3.14) |
 | HTTP operations | 2 |
 | Config axes | 2 |
 | Usage surface | 3 |
 | Extension points | 3 |
+| Error codes | 44 |
 | Fleet dependencies | [`stapel-core`](https://github.com/usestapel/stapel-core) · [`stapel-notifications`](https://github.com/usestapel/stapel-notifications) (optional) |
 
 ## Documentation
 
-[capabilities.json](https://github.com/usestapel/stapel-mailtrap/blob/main/docs/capabilities.json) · [llms.txt (for agents)](https://github.com/usestapel/stapel-mailtrap/blob/main/docs/llms.txt)
+[OpenAPI](https://github.com/usestapel/stapel-mailtrap/blob/main/docs/schema.json) · [capabilities.json](https://github.com/usestapel/stapel-mailtrap/blob/main/docs/capabilities.json) · [llms.txt (for agents)](https://github.com/usestapel/stapel-mailtrap/blob/main/docs/llms.txt)
 
 ## What this is
 

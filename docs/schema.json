@@ -1,0 +1,401 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "",
+    "version": "0.0.0"
+  },
+  "paths": {
+    "/mailtrap/api/v1/emails/": {
+      "get": {
+        "operationId": "list_trapped_emails",
+        "description": "List trapped emails (newest first), paginated, filterable by scope.\n\n**Permissions:** `OperandHolder`",
+        "summary": "List trapped emails",
+        "parameters": [
+          {
+            "name": "anchor",
+            "required": false,
+            "in": "query",
+            "description": "Anchor value to paginate from (exclusive)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "required": false,
+            "in": "query",
+            "description": "Pagination direction",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "next",
+                "prev",
+                "center"
+              ],
+              "default": "next"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of items (default 25, max 100)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scope_key",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Restrict to a single opaque host scope."
+          }
+        ],
+        "tags": [
+          "Mail"
+        ],
+        "security": [
+          {
+            "JWTCookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedTrappedEmailListItemList"
+                },
+                "examples": {
+                  "TrappedEmailListItem": {
+                    "value": {
+                      "items": [
+                        {
+                          "id": "3f2b8c1e-5a4d-4e6f-9b7a-1c2d3e4f5a6b",
+                          "to_email": "user@example.com",
+                          "from_email": "noreply@example.com",
+                          "subject": "Your sign-in code",
+                          "scope_key": "acme",
+                          "attachment_count": 0,
+                          "created_at": "2026-11-20T10:30:00+00:00"
+                        }
+                      ],
+                      "next_anchor": null,
+                      "prev_anchor": null,
+                      "has_next": false,
+                      "has_prev": false,
+                      "count": 1
+                    }
+                  }
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/mailtrap/api/v1/emails/{email_id}/": {
+      "get": {
+        "operationId": "get_trapped_email",
+        "description": "Retrieve one trapped email (full bodies + attachment metadata).\n\n**Permissions:** `OperandHolder`",
+        "summary": "Get a trapped email",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "Mail"
+        ],
+        "security": [
+          {
+            "JWTCookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrappedEmailDetail"
+                },
+                "examples": {
+                  "TrappedEmailDetail": {
+                    "value": {
+                      "id": "3f2b8c1e-5a4d-4e6f-9b7a-1c2d3e4f5a6b",
+                      "to_email": "user@example.com",
+                      "from_email": "noreply@example.com",
+                      "subject": "Your sign-in code",
+                      "body_html": "<p>Your code is 123456</p>",
+                      "body_text": "Your code is 123456",
+                      "attachments": [
+                        {
+                          "filename": "invoice.pdf",
+                          "content_type": "application/pdf",
+                          "size": 18234
+                        }
+                      ],
+                      "headers": {
+                        "Reply-To": "support@example.com"
+                      },
+                      "scope_key": "acme",
+                      "created_at": "2026-11-20T10:30:00+00:00"
+                    }
+                  }
+                }
+              }
+            },
+            "description": ""
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StapelError"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginatedTrappedEmailListItemList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrappedEmailListItem"
+            }
+          },
+          "next_anchor": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "nullable": true,
+            "example": null,
+            "description": "Anchor value for next page. The raw value of the ordering field: a string for a datetime anchor, an integer for a sequence one. Set `anchor_type` on the paginator to narrow this."
+          },
+          "prev_anchor": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "nullable": true,
+            "example": null,
+            "description": "Anchor value for previous page. The raw value of the ordering field: a string for a datetime anchor, an integer for a sequence one. Set `anchor_type` on the paginator to narrow this."
+          },
+          "has_next": {
+            "type": "boolean",
+            "description": "Whether there are more items after this page",
+            "example": false
+          },
+          "has_prev": {
+            "type": "boolean",
+            "description": "Whether there are items before this page",
+            "example": false
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of items in current page",
+            "example": 1
+          }
+        },
+        "required": [
+          "items",
+          "has_next",
+          "has_prev",
+          "count"
+        ]
+      },
+      "StapelError": {
+        "type": "object",
+        "description": "Structured error returned by all Stapel API endpoints.",
+        "properties": {
+          "localizable_error": {
+            "type": "string",
+            "description": "Translation key for client-side localization",
+            "example": "error.404.not_found"
+          },
+          "error": {
+            "type": "string",
+            "description": "Human-readable fallback/debug message — not reliably English,"
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Context values for template placeholders",
+            "example": {
+              "retry_after": 30
+            }
+          },
+          "error_language": {
+            "type": "string",
+            "description": "The language `error` is written in (e.g. 'en', 'ru'),"
+          }
+        },
+        "required": [
+          "error",
+          "localizable_error"
+        ]
+      },
+      "TrappedEmailDetail": {
+        "type": "object",
+        "description": "A trapped email in the detail view (full bodies + attachment metadata).",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Message id (UUID)",
+            "example": "3f2b8c1e-5a4d-4e6f-9b7a-1c2d3e4f5a6b"
+          },
+          "to_email": {
+            "type": "string",
+            "description": "Recipient address",
+            "example": "user@example.com"
+          },
+          "from_email": {
+            "type": "string",
+            "description": "Sender address",
+            "example": "noreply@example.com"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject line",
+            "example": "Your sign-in code"
+          },
+          "body_html": {
+            "type": "string",
+            "description": "Rendered HTML body (empty when STORE_BODY is off)",
+            "example": "<p>Your code is 123456</p>"
+          },
+          "body_text": {
+            "type": "string",
+            "description": "Plain-text body (empty when STORE_BODY is off)",
+            "example": "Your code is 123456"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {}
+            },
+            "description": "Attachment metadata dicts (filename/content_type/size)",
+            "example": [
+              {
+                "filename": "invoice.pdf",
+                "content_type": "application/pdf",
+                "size": 18234
+              }
+            ]
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Header snapshot",
+            "example": {
+              "Reply-To": "support@example.com"
+            }
+          },
+          "scope_key": {
+            "type": "string",
+            "description": "Opaque host scope",
+            "example": "acme"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Capture time (tz-aware ISO 8601)",
+            "example": "2026-11-20T10:30:00+00:00"
+          }
+        },
+        "required": [
+          "body_html",
+          "body_text",
+          "from_email",
+          "id",
+          "subject",
+          "to_email"
+        ]
+      },
+      "TrappedEmailListItem": {
+        "type": "object",
+        "description": "A trapped email in the list view (envelope, no bodies).",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Message id (UUID)",
+            "example": "3f2b8c1e-5a4d-4e6f-9b7a-1c2d3e4f5a6b"
+          },
+          "to_email": {
+            "type": "string",
+            "description": "Recipient address",
+            "example": "user@example.com"
+          },
+          "from_email": {
+            "type": "string",
+            "description": "Sender address",
+            "example": "noreply@example.com"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject line",
+            "example": "Your sign-in code"
+          },
+          "scope_key": {
+            "type": "string",
+            "description": "Opaque host scope (workspace/org/project/tenant)",
+            "example": "acme"
+          },
+          "attachment_count": {
+            "type": "integer",
+            "description": "Number of attachments (metadata only)",
+            "example": 0
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Capture time (tz-aware ISO 8601)",
+            "example": "2026-11-20T10:30:00+00:00"
+          }
+        },
+        "required": [
+          "attachment_count",
+          "created_at",
+          "from_email",
+          "id",
+          "scope_key",
+          "subject",
+          "to_email"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "JWTCookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "stapel_jwt",
+        "description": "JWT token stored in cookie. Login via /auth/admin/ to get the cookie."
+      }
+    }
+  }
+}
